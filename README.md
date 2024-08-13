@@ -222,21 +222,166 @@ spec:
   type: LoadBalancer
 ```
 
+#### create mysql-secrets config and deploy it
 
+kubectl create secret generic mysql-secrets \
+  --from-literal=ecomuser=admin \
+  --from-literal=ecompassword=admin
 
+#### Deploy websites_deplooyment.yaml
+  
+  kubectl apply -f manifests/website_deployment.yaml
 
+  kubectl get pods (Verify they are running)
 
+#### Deploy Service
 
+kubectl apply -f manifests/website-service.yaml
 
+Confirm its service is running
 
+kubectl get svc
 
+#### Expose to loadbalancer, using MetalLB
 
+**1. Create the MetalLB namespace:**
 
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
 
+**2. Apply the MetalLB manifest:**
 
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
 
+**3. Wait for the pods to have a status of Running:**
 
+kubectl get pods -n metallb-system --watch
 
+**4. Configure metallb to use an IP range from the network Docker has created for the kind namespace, we can find this using the following command:**
+
+docker network inspect -f '{{.IPAM.Config}}' kind
+
+**5. The output will include a cidr such as 172.18.0.0/16, so you want your load-balancer services to be assigned an external IP address from this range, for example, to use 172.18.255.200 to 172.19.255.250:**
+
+create a metallb-configmap.yaml file with the following contents (update the IP addresses to be within the range outputted by the previous command):
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 172.19.255.200-172.19.255.250
+```
+
+**6. Add this to your cluster:**
+
+kubectl apply -f manifests/metallb-configmap.yaml
+
+Now when you get your services you should see the foo-bar-service has an external IP:
+
+kubectl get svc
+
+### Add Ingress for WSL and Mac
+
+**1. Update the kind-config.yaml file to allow ingress on ports 80 and 443, and set up a custom node label to identify the control plane node as being ingress-ready:**
+
+Three node cluster with an ingress-ready control-plane node and extra port mappings over 80/443 and 2 workers
+
+```yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+- role: worker
+- role: worker
+```
+
+Create your cluster with `kind create cluster --config kind-config.yaml`
+
+**2. Patch kind to forward the hostPorts to an NGINX ingress controller and schedule it to the control-plane custom labelled node:**
+
+`kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml`
+
+**3. Create an nginx-ingress.yaml file with the following contents:**
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/foo"
+        backend:
+          service:
+            name: foo-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/bar"
+        backend:
+          service:
+            name: bar-service
+            port:
+              number: 80
+```
+
+**4. And add this to your cluster (if you get an error you may need to wait a minute or two for the pods in the ingress-nginx namespace to be ready before retrying):**
+
+`kubectl apply -f nginx-ingress.yaml`
+
+This will receive ingress from the host on ports 80 and 443, forward it to the Ingress controller which will use the path to route the request to the appropriate services.
+
+**5. Edit the nginx-ingress.yaml file to have the following contents (note that we're adding an annotation to the metadata as well as updating the two path sections to include a regex):**
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/foo(/|$)(.*)"
+        backend:
+          service:
+            name: foo-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/bar(/|$)(.*)"
+        backend:
+          service:
+            name: bar-service
+            port:
+              number: 80
+```
 
 
 
