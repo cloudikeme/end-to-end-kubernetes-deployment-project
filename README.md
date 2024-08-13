@@ -281,7 +281,7 @@ data:
 
 **6. Add this to your cluster:**
 
-kubectl apply -f manifests/metallb-configmap.yaml
+`kubectl apply -f manifests/metallb-configmap.yaml`
 
 Now when you get your services you should see the foo-bar-service has an external IP:
 
@@ -383,44 +383,64 @@ spec:
               number: 80
 ```
 
+Re-apply this to your cluster: `kubectl apply -f nginx-ingress.yaml`
 
+Let’s add another rule to the nginx-ingress.yaml file taking the /foo-bar path and forwarding to our foo-bar-service:
 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/foo(/|$)(.*)"
+        backend:
+          service:
+            name: foo-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/bar(/|$)(.*)"
+        backend:
+          service:
+            name: bar-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/foo-bar(/|$)(.*)"
+        backend:
+          service:
+            name: foo-bar-service
+            port:
+              number: 80
+Re-apply this to your cluster:
 
+kubectl apply -f nginx-ingress.yaml
+Now when you curl localhost/foo-bar you should see either foo or bar and the output will change randomly as your requests are load-balanced across your services. In bash you can do this with:
 
+for _ in {1..10}; do
+  curl localhost/foo-bar
+done
+And in PowerShell the same can be achieved with:
 
+for($i=0; $i -lt 10; $i++)
+{
+    curl localhost/foo-bar
+}
+In either case, the output should be a variation on:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+bar
+foo
+foo
+bar
+bar
+bar
+foo
+foo
+foo
+bar
