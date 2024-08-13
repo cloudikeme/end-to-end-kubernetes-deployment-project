@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ecommerce-website
-        image: cloudikeme/ecom-web:v0.1 
+        image: cloudikeme/ecom-web:v0.2
         ports:
         - containerPort: 80
         resources:

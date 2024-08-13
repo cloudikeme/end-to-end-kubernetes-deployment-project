@@ -37,7 +37,7 @@ spec:
               name: mysql-secrets
               key: password
         - name: MYSQL_DATABASE
-          value: ecommerce_db
+          value: ecomdb
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
