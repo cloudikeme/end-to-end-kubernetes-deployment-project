@@ -1,0 +1,1 @@
+add definitiojn of key resources in each step , according to kubernetes doc.

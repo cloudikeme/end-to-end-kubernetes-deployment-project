@@ -1,0 +1,3 @@
+[submodule "learning-app-ecommerce"]
+	path = learning-app-ecommerce
+	url = https://github.com/cloudikeme/learning-app-ecommerce.git
