@@ -9,7 +9,7 @@ ENV DB_HOST=mysql-service \
     DB_PASSWORD=ecompassword \
     DB_NAME=ecomdb
 
-RUN echo "ServerName 172.20.1.101:80" >> /etc/apache2/apache2.conf
+RUN echo "ServerName 172.20.1.101" >> /etc/apache2/apache2.conf
 
 # Add this line for debugging
 RUN echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
