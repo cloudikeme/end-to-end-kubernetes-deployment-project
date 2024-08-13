@@ -31,11 +31,11 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mysql-secrets 
-              key: ecomuser
+              key: username
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-secrets 
-              key: ecompassword
+              key: password
         - name: DB_NAME
           value: ecomdb
