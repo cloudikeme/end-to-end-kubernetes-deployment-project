@@ -236,11 +236,24 @@ kubectl create secret generic mysql-secrets \
 
 #### Deploy Service
 
-kubectl apply -f manifests/website-service.yaml
+`kubectl apply -f manifests/website-service.yaml`
 
-Confirm its service is running
+Confirm its service is running: `kubectl get svc`
 
-kubectl get svc
+  Port-Forward so you can access it externally:
+
+`kubectl port-forward svc/ecommerce-website-service 3000:80`
+
+
+
+
+
+
+
+
+
+
+
 
 #### Expose to loadbalancer, using MetalLB
 
