@@ -169,8 +169,6 @@ $darkModeEnabled = getenv('DARK_MODE_ENABLED') === 'true';
                   <?php
                     }
                   ?>
-
-
             </div>
         </section>
 
