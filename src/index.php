@@ -1,3 +1,6 @@
+<?php
+$darkModeEnabled = getenv('DARK_MODE_ENABLED') === 'true';
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -14,6 +17,9 @@
         <!-- Icon CSS-->
         <link rel="stylesheet" href="vendors/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="vendors/linearicons/linearicons-1.0.0.css">
+        <!-- Darkmode CSS-->
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/dark-mode.css" rel="stylesheet">
         <!-- Animations CSS-->
         <link rel="stylesheet" href="vendors/wow-js/animate.css">
         <!-- owl_carousel-->
@@ -29,8 +35,11 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+        <?php if ($darkModeEnabled): ?>
+        <link href="css/dark-mode.css" rel="stylesheet">
+        <?php endif; ?>
     </head>
-    <body>
+    <body<?php echo $darkModeEnabled ? ' class="dark-mode"' : ''; ?>>
         <!--==========Main Header==========-->
         <header class="main_header_area">
             <nav class="navbar navbar-default navbar-fixed-top" id="main_navbar">
@@ -74,10 +83,17 @@
                             </ul>
                         </div>
                         <div class="col-md-1 p0">
+                            <?php if ($darkModeEnabled): ?>
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a href="#" class="nav_searchFrom"><i class="lnr lnr-magnifier"></i></a></li>
-                                
+                                <li>
+                                    <div class="dark-mode-toggle">
+                                        <input type="checkbox" id="darkModeToggle" class="dark-mode-input">
+                                        <label for="darkModeToggle" class="dark-mode-label">Dark Mode</label>
+                                    </div>
+                                </li>
                             </ul>
+                            <?php endif; ?>
                         </div>
                     </div><!-- /.navbar-collapse -->
                     </div>
@@ -185,5 +201,11 @@
         <script src="vendors/owl_carousel/owl.carousel.min.js"></script>
         <!-- Theme js -->
         <script src="js/theme.js"></script>
+        <!-- Dark Mode js-->
+        <script src="js/theme.js"></script>
+        <script src="js/dark-mode.js"></script>
+        <?php if ($darkModeEnabled): ?>
+        <script src="js/dark-mode.js"></script>
+        <?php endif; ?>
     </body>
 </html>

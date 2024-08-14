@@ -90,6 +90,7 @@ body.dark-mode {
 <link href="css/dark-mode.css" rel="stylesheet">
 <!-- ... (rest of the code) ... -->
 ```
+
 4. Add JavaScript to handle the dark mode toggle. Create a new file `js/dark-mode.js`:
 
 ```javascript
@@ -126,6 +127,137 @@ document.addEventListener('DOMContentLoaded', (event) => {
 </body>
 </html>
 ```
+### DARKMODE CONFIG
+
+**1. First, let's create a ConfigMap YAML file. We'll call it `darkmode-config.yaml`:**
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: darkmode-config
+data:
+  DARK_MODE_ENABLED: "true"
+```
+
+**2. Apply this ConfigMap to your Kubernetes cluster:**
+
+```bash
+kubectl apply -f darkmode-config.yaml
+```
+
+**3. Modify your application's Deployment YAML to use this ConfigMap. Add an environment variable that reads from the ConfigMap:**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudikeme-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudikeme-store
+  template:
+    metadata:
+      labels:
+        app: cloudikeme-store
+    spec:
+      containers:
+      - name: cloudikeme-store
+        image: your-image:tag
+        env:
+        - name: DARK_MODE_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: darkmode-config
+              key: DARK_MODE_ENABLED
+        # ... other configuration ...
+```
+
+4. Now, let's modify our PHP code to read this environment variable. Update the `header.php` file:
+
+```php
+<!-- views/header.php -->
+<?php
+$darkModeEnabled = getenv('DARK_MODE_ENABLED') === 'true';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... other head elements ... -->
+    <?php if ($darkModeEnabled): ?>
+    <link href="css/dark-mode.css" rel="stylesheet">
+    <?php endif; ?>
+</head>
+<body<?php echo $darkModeEnabled ? ' class="dark-mode"' : ''; ?>>
+    <!-- ... rest of the body ... -->
+    <?php if ($darkModeEnabled): ?>
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" class="nav_searchFrom"><i class="lnr lnr-magnifier"></i></a></li>
+        <li>
+            <div class="dark-mode-toggle">
+                <input type="checkbox" id="darkModeToggle" class="dark-mode-input">
+                <label for="darkModeToggle" class="dark-mode-label">Dark Mode</label>
+            </div>
+        </li>
+    </ul>
+    <?php endif; ?>
+    <!-- ... rest of the header ... -->
+```
+
+5. Update the `footer.php` to conditionally include the dark mode JavaScript:
+
+```php
+<!-- views/footer.php -->
+    <!-- ... other scripts ... -->
+    <?php if ($darkModeEnabled): ?>
+    <script src="js/dark-mode.js"></script>
+    <?php endif; ?>
+</body>
+</html>
+```
+
+6. Modify the `dark-mode.js` file to check the initial state from the body class:
+
+```javascript
+// js/dark-mode.js
+document.addEventListener('DOMContentLoaded', (event) => {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    // Check if dark mode is initially enabled
+    if (body.classList.contains('dark-mode')) {
+        darkModeToggle.checked = true;
+    }
+
+    darkModeToggle.addEventListener('change', () => {
+        if (darkModeToggle.checked) {
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+        }
+    });
+});
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

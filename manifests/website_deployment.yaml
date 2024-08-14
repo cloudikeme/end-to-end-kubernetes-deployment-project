@@ -39,8 +39,8 @@ spec:
               key: password
         - name: DB_NAME
           value: ecomdb
-        - name: FEATURE_DARK_MODE
+        - name: DARK_MODE_ENABLED
           valueFrom:
             configMapKeyRef:
-              name: feature-toggle-config
-              key: FEATURE_DARK_MODE
+              name: darkmode-config
+              key: DARK_MODE_ENABLED

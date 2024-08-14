@@ -14,9 +14,6 @@
         <!-- Icon CSS-->
         <link rel="stylesheet" href="vendors/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="vendors/linearicons/linearicons-1.0.0.css">
-        <!-- Darkmode CSS-->
-        <link href="css/style.css" rel="stylesheet">
-        <link href="css/dark-mode.css" rel="stylesheet">
         <!-- Animations CSS-->
         <link rel="stylesheet" href="vendors/wow-js/animate.css">
         <!-- owl_carousel-->
@@ -79,12 +76,7 @@
                         <div class="col-md-1 p0">
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a href="#" class="nav_searchFrom"><i class="lnr lnr-magnifier"></i></a></li>
-                                <li>
-                                    <div class="dark-mode-toggle">
-                                        <input type="checkbox" id="darkModeToggle" class="dark-mode-input">
-                                        <label for="darkModeToggle" class="dark-mode-label">Dark Mode</label>
-                                    </div>
-                                </li>
+                                
                             </ul>
                         </div>
                     </div><!-- /.navbar-collapse -->
@@ -193,8 +185,5 @@
         <script src="vendors/owl_carousel/owl.carousel.min.js"></script>
         <!-- Theme js -->
         <script src="js/theme.js"></script>
-        <!-- Dark Mode js-->
-        <script src="js/theme.js"></script>
-        <script src="js/dark-mode.js"></script>
     </body>
 </html>

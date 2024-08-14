@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: darkmode-config
+data:
+  DARK_MODE_ENABLED: "true"
