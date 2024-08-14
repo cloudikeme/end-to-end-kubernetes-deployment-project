@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ecommerce-website
-        image: cloudikeme/ecom-web:v0.2
+        image: cloudikeme/ecom-web:v0.3
         ports:
         - containerPort: 80
         resources:
@@ -39,8 +39,8 @@ spec:
               key: password
         - name: DB_NAME
           value: ecomdb
-        - name: DARK_MODE_ENABLED
+        - name: FEATURE_DARK_MODE
           valueFrom:
             configMapKeyRef:
-              name: darkmode-config
-              key: DARK_MODE_ENABLED
+              name: feature-toggle-config
+              key: FEATURE_DARK_MODE

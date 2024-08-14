@@ -4,7 +4,6 @@
 
 First, let's assume you've modified your PHP application to check for an environment variable `FEATURE_DARK_MODE`. Here's a simple example of how this might look in your PHP code:
 
-
 We'll need to modify the HTML, add some CSS, and include a bit of JavaScript to implement this feature. Here's how we can do it:
 
 1. First, let's modify the `header.php` file to include a toggle switch:
@@ -127,6 +126,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 </body>
 </html>
 ```
+
 ### DARKMODE CONFIG
 
 **1. First, let's create a ConfigMap YAML file. We'll call it `darkmode-config.yaml`:**
