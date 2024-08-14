@@ -76,6 +76,7 @@
                         <div class="col-md-1 p0">
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a href="#" class="nav_searchFrom"><i class="lnr lnr-magnifier"></i></a></li>
+                                
                             </ul>
                         </div>
                     </div><!-- /.navbar-collapse -->
