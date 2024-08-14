@@ -1,0 +1,43 @@
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.dark-mode .navbar {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .navbar-default .navbar-nav > li > a {
+    color: #ffffff;
+}
+
+.dark-mode .business_content {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .footer_area {
+    background-color: #2c2c2c;
+}
+
+.dark-mode-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.dark-mode-input {
+    display: none;
+}
+
+.dark-mode-label {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: #ccc;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode-input:checked + .dark-mode-label {
+    background-color: #333;
+    color: #fff;
+}

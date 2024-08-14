@@ -4,6 +4,132 @@
 
 First, let's assume you've modified your PHP application to check for an environment variable `FEATURE_DARK_MODE`. Here's a simple example of how this might look in your PHP code:
 
+
+We'll need to modify the HTML, add some CSS, and include a bit of JavaScript to implement this feature. Here's how we can do it:
+
+1. First, let's modify the `header.php` file to include a toggle switch:
+
+```php
+<!-- views/header.php -->
+<!-- ... (previous code) ... -->
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav main_nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/contact">Contact us</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" class="nav_searchFrom"><i class="lnr lnr-magnifier"></i></a></li>
+        <li>
+            <div class="dark-mode-toggle">
+                <input type="checkbox" id="darkModeToggle" class="dark-mode-input">
+                <label for="darkModeToggle" class="dark-mode-label">Dark Mode</label>
+            </div>
+        </li>
+    </ul>
+</div>
+<!-- ... (rest of the code) ... -->
+```
+
+
+2. Now, let's add some CSS for the dark mode. Create a new file `css/dark-mode.css`:
+
+```css
+/* css/dark-mode.css */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.dark-mode .navbar {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .navbar-default .navbar-nav > li > a {
+    color: #ffffff;
+}
+
+.dark-mode .business_content {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .footer_area {
+    background-color: #2c2c2c;
+}
+
+.dark-mode-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.dark-mode-input {
+    display: none;
+}
+
+.dark-mode-label {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: #ccc;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode-input:checked + .dark-mode-label {
+    background-color: #333;
+    color: #fff;
+}
+```
+
+3. Include the new CSS file in the `header.php`:
+
+```php
+<!-- views/header.php -->
+<!-- ... (previous code) ... -->
+<link href="css/style.css" rel="stylesheet">
+<link href="css/dark-mode.css" rel="stylesheet">
+<!-- ... (rest of the code) ... -->
+```
+4. Add JavaScript to handle the dark mode toggle. Create a new file `js/dark-mode.js`:
+
+```javascript
+// js/dark-mode.js
+document.addEventListener('DOMContentLoaded', (event) => {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    // Check if dark mode preference is saved in localStorage
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    }
+
+    darkModeToggle.addEventListener('change', () => {
+        if (darkModeToggle.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', null);
+        }
+    });
+});
+```
+
+5. Include the new JavaScript file in the `footer.php`:
+
+```php
+<!-- views/footer.php -->
+<!-- ... (previous code) ... -->
+<script src="js/theme.js"></script>
+<script src="js/dark-mode.js"></script>
+</body>
+</html>
+```
+
+
+
+
 ```php
 <?php
 $darkModeEnabled = getenv('FEATURE_DARK_MODE') === 'true';
@@ -143,3 +269,4 @@ Your website should now render in dark mode, demonstrating how ConfigMaps can ma
    ```
 
 This implementation demonstrates how you can use Kubernetes ConfigMaps to manage feature toggles in your application. It allows you to change application behavior without modifying the code or rebuilding the Docker image, providing a flexible way to manage features in your e-commerce platform
+
